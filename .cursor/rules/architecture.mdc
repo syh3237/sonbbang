@@ -1,0 +1,31 @@
+---
+alwaysApply: true
+---
+
+# Project Architecture
+
+- Vue3 Web 우선 개발
+- 추후 Flutter App 개발 예정
+- API와 DB는 Supabase 공유
+
+# Folder Structure
+
+- views = page
+- components = reusable ui
+- stores = pinia
+- composables = reusable logic
+- services = api and supabase
+
+# Rules
+
+- UI와 데이터 로직 분리
+- 컴포넌트에서 직접 Supabase 호출 금지
+- services를 통해서만 데이터 접근
+
+# Project Context
+
+항상 아래 문서를 참고한다.
+
+- docs/project-overview.md
+- docs/db-schema.md
+- docs/feature-roadmap.md

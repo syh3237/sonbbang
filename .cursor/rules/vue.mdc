@@ -1,0 +1,22 @@
+---
+globs:
+  - src/**/*.vue
+alwaysApply: true
+---
+
+# Vue Rules
+
+- Vue3 사용
+- script setup 사용
+- Composition API 사용
+- Options API 사용 금지
+
+# Component Rules
+
+- 단일 책임 원칙
+- 300줄 이상이면 분리 고려
+- 재사용 가능한 로직은 composables 사용
+
+# State
+
+- 전역 상태는 Pinia 사용

@@ -1,0 +1,55 @@
+// color
+$color_primary: #3b6ff5;
+$color_primary_dark: #2a56c9;
+$color_text: #1a1d26;
+$color_text_muted: #6b7280;
+$color_border: #e5e7eb;
+$color_surface: #ffffff;
+$color_background: #f5f6f8;
+$color_today: #eef3ff;
+$color_selected: #3b6ff5;
+$color_selected_text: #ffffff;
+$color_other_month: #9ca3af;
+$color_sunday: #e11d48;
+
+// spacing
+$space_xs: 0.25rem;
+$space_sm: 0.5rem;
+$space_md: 1rem;
+$space_lg: 1.5rem;
+$space_xl: 2rem;
+
+// size
+$border_width: 0.0625rem;
+$outline_width: 0.125rem;
+$outline_offset: 0.125rem;
+$radius_sm: 0.5rem;
+$radius_md: 0.75rem;
+$btn_min_height: 2.75rem;
+$btn_icon_min_size: 2.5rem;
+
+// font
+$font_family_base:
+  "Pretendard",
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  sans-serif;
+$font_size_sm: 0.875rem;
+$font_size_base: 1rem;
+$font_size_lg: 1.25rem;
+$font_size_xl: 1.5rem;
+$font_size_xxl: 2rem;
+
+// layout
+$app_max_width: 30rem;
+$calendar_cell_min_height: 4.5rem;
+$title_section_min_width: 7.5rem;
+
+// z-index
+$z_nav: 100;
+$z_fnb: 100;
+
+// fnb
+$fnb_height: 3.75rem;
+$icon_size_fnb: 1.5rem;

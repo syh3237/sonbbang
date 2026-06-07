@@ -1,0 +1,52 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.btn {
+  @include flex_center;
+  min-height: $btn_min_height;
+  padding: 0 $space_lg;
+  border-radius: $radius_sm;
+  font-weight: 600;
+  color: $color_text;
+  background-color: transparent;
+
+  &:focus-visible {
+    @include focus_ring;
+  }
+
+  &.is_disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn_primary {
+  @include flex_center;
+  min-height: $btn_min_height;
+  padding: 0 $space_lg;
+  border-radius: $radius_sm;
+  font-weight: 600;
+  color: $color_selected_text;
+  background-color: $color_primary;
+
+  &:focus-visible {
+    @include focus_ring;
+  }
+
+  &.is_disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn_ghost {
+  @include flex_center;
+  min-width: $btn_icon_min_size;
+  min-height: $btn_icon_min_size;
+  border-radius: $radius_sm;
+  color: $color_text;
+
+  &:focus-visible {
+    @include focus_ring;
+  }
+}

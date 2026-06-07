@@ -1,0 +1,23 @@
+@use '../abstracts/variables' as *;
+
+body {
+  font-family: $font_family_base;
+  font-size: $font_size_base;
+  color: $color_text;
+  background-color: $color_background;
+}
+
+h1 {
+  font-size: $font_size_xl;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: $font_size_lg;
+  font-weight: 600;
+}
+
+.title_page {
+  font-size: $font_size_xl;
+  font-weight: 700;
+}

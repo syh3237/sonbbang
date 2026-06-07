@@ -1,0 +1,26 @@
+@use '../abstracts/variables' as *;
+
+.form_field {
+  display: flex;
+  flex-direction: column;
+  gap: $space_xs;
+}
+
+.form_label {
+  font-size: $font_size_sm;
+  font-weight: 600;
+  color: $color_text;
+}
+
+.form_input {
+  min-height: $btn_min_height;
+  padding: 0 $space_md;
+  border: $border_width solid $color_border;
+  border-radius: $radius_sm;
+  background-color: $color_surface;
+
+  &:focus {
+    border-color: $color_primary;
+    outline: none;
+  }
+}

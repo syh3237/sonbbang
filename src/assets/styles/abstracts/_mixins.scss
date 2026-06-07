@@ -1,0 +1,18 @@
+@use 'variables' as *;
+
+@mixin flex_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin focus_ring {
+  outline: $outline_width solid $color_primary;
+  outline-offset: $outline_offset;
+}
