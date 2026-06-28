@@ -1,10 +1,12 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCalendarStore } from '@/stores/calendar.store'
+import { useScheduleStore } from '@/stores/schedule.store'
 import { parseDateKey, toDateKey } from '@/utils/date'
 
 export function useCalendar() {
   const calendarStore = useCalendarStore()
+  const scheduleStore = useScheduleStore()
   const { selectedDateKey } = storeToRefs(calendarStore)
 
   const selectedDate = computed({
@@ -28,6 +30,7 @@ export function useCalendar() {
     const page = pages[0]
     if (page) {
       calendarStore.setMonth(page.year, page.month)
+      scheduleStore.fetchByMonth(page.year, page.month)
     }
   }
 

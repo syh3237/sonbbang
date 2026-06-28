@@ -24,7 +24,7 @@ const router = createRouter({
           path: 'mypage',
           name: 'mypage',
           component: () => import('@/views/mypage/MypageView.vue'),
-          meta: { title: '마이페이지' },
+          meta: { title: '마이페이지', requiresAuth: true },
         },
         {
           path: 'friends',
@@ -36,20 +36,19 @@ const router = createRouter({
     },
     {
       path: '/auth',
-      component: () => import('@/layouts/AuthLayout.vue'),
-      meta: { guestOnly: true },
+      component: () => import('@/layouts/LoginLayout.vue'),
       children: [
         {
           path: 'login',
           name: 'login',
           component: () => import('@/views/auth/LoginView.vue'),
-          meta: { title: '로그인', guestOnly: true },
+          meta: { title: '로그인' },
         },
         {
           path: 'signup',
           name: 'signup',
           component: () => import('@/views/auth/SignupView.vue'),
-          meta: { title: '회원가입', guestOnly: true },
+          meta: { title: '회원가입' },
         },
       ],
     },

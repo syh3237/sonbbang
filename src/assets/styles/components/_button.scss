@@ -1,5 +1,5 @@
-@use '../abstracts/variables' as *;
-@use '../abstracts/mixins' as *;
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
 
 .btn {
   @include flex_center;
@@ -24,7 +24,6 @@
   @include flex_center;
   min-height: $btn_min_height;
   padding: 0 $space_lg;
-  border-radius: $radius_sm;
   font-weight: 600;
   color: $color_selected_text;
   background-color: $color_primary;
@@ -48,5 +47,26 @@
 
   &:focus-visible {
     @include focus_ring;
+  }
+}
+
+.btn_save {
+  @include flex_center;
+  width: 100%;
+  min-height: $btn_min_height;
+  margin-top: auto;
+  padding: 0 $space_lg;
+  border-radius: $radius_sm;
+  font-weight: 600;
+  color: $color_selected_text;
+  background-color: $color_primary;
+
+  &:focus-visible {
+    @include focus_ring;
+  }
+
+  &.is_disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }

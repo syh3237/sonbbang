@@ -15,4 +15,14 @@ export const scheduleService = {
 
     return query
   },
+
+  async create(payload) {
+    const client = assertSupabase()
+    return client.from('schedules').insert(payload).select().single()
+  },
+
+  async update({ id, payload }) {
+    const client = assertSupabase()
+    return client.from('schedules').update(payload).eq('id', id).select().single()
+  },
 }
