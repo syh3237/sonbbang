@@ -89,6 +89,8 @@ async function handleGoogleLogin() {
     </button>
 
     <div class="auth_links">
+      <RouterLink class="btn_text" :to="{ name: 'find-account' }">아이디 · 비밀번호 찾기</RouterLink>
+      <span class="auth_links_divider">|</span>
       <RouterLink class="btn_text" :to="{ name: 'signup' }">회원가입</RouterLink>
     </div>
   </section>
@@ -165,8 +167,14 @@ async function handleGoogleLogin() {
 
 .auth_links {
   display: flex;
+  align-items: center;
   justify-content: center;
+  gap: $space_sm;
   font-size: $font_size_sm;
+}
+
+.auth_links_divider {
+  color: $color_border;
 }
 
 .btn_text {

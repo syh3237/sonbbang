@@ -50,6 +50,18 @@ const router = createRouter({
           component: () => import('@/views/auth/SignupView.vue'),
           meta: { title: '회원가입' },
         },
+        {
+          path: 'find-account',
+          name: 'find-account',
+          component: () => import('@/views/auth/FindAccountView.vue'),
+          meta: { title: '계정 찾기' },
+        },
+        {
+          path: 'reset-password',
+          name: 'reset-password',
+          component: () => import('@/views/auth/ResetPasswordView.vue'),
+          meta: { title: '비밀번호 재설정' },
+        },
       ],
     },
     {

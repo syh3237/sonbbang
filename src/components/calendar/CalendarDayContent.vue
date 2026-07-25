@@ -4,57 +4,42 @@ import { useScheduleDisplay } from '@/composables/useScheduleDisplay'
 import { toDateKey } from '@/utils/date'
 
 const props = defineProps({
-  day: {
-    type: Object,
-    required: true,
-  },
-  dayProps: {
-    type: Object,
-    required: true,
-  },
-  dayEvents: {
-    type: Object,
-    required: true,
-  },
+  day: { type: Object, required: true },
+  dayProps: { type: Object, required: true },
+  dayEvents: { type: Object, required: true },
 })
 
 const { getSchedulesForDay } = useScheduleDisplay()
 
-const schedules = computed(() => {
+/**
+ * 슬롯 순서대로 정렬된 행 배열 반환
+ * - null 항목 = 슬롯이 비어있는 gap (다른 셀의 이벤트가 이 슬롯을 점유 중)
+ * - null을 빈 칸으로 렌더링해야 이벤트 막대 위치가 날짜 전반에 걸쳐 일치
+ */
+const scheduleRows = computed(() => {
   const currentKey = toDateKey(props.day.date)
   const dayOfWeek = props.day.date.getDay() // 0=일, 6=토
 
-  return getSchedulesForDay(props.day)
-    .map((schedule) => {
-      const startKey = schedule.start_at.slice(0, 10)
-      const endKey = schedule.end_at.slice(0, 10)
-      const isSingle = startKey === endKey
-      const isActualStart = currentKey === startKey
-      const isActualEnd = currentKey === endKey
+  const daySchedules = getSchedulesForDay(props.day).map((schedule) => {
+    const startKey = schedule.start_at.slice(0, 10)
+    const endKey = schedule.end_at.slice(0, 10)
+    const isSingle = startKey === endKey
+    const isActualStart = currentKey === startKey
+    const isActualEnd = currentKey === endKey
+    const isVisualStart = isSingle || isActualStart || dayOfWeek === 0
+    const isVisualEnd = isSingle || isActualEnd || dayOfWeek === 6
 
-      // 주 경계(일요일 or 토요일)도 시각적 시작/끝으로 처리
-      const isVisualStart = isSingle || isActualStart || dayOfWeek === 0
-      const isVisualEnd = isSingle || isActualEnd || dayOfWeek === 6
+    return { ...schedule, isSingle, isVisualStart, isVisualEnd }
+  })
 
-      // 기간 일정 텍스트 중앙 정렬: 이번 주 행에서 몇 칸을 차지하는지 계산
-      let daysInRow = 1
-      if (!isSingle && isVisualStart) {
-        const endDate = new Date(endKey + 'T00:00:00')
-        const cellDate = new Date(currentKey + 'T00:00:00')
-        const daysToSaturday = 6 - dayOfWeek
-        const daysToEnd = Math.round((endDate - cellDate) / (1000 * 60 * 60 * 24))
-        daysInRow = Math.min(daysToSaturday, daysToEnd) + 1
-      }
+  if (!daySchedules.length) return []
 
-      return { ...schedule, isSingle, isVisualStart, isVisualEnd, daysInRow }
-    })
-    .sort((a, b) => {
-      // 기간 일정(multi-day) 먼저, 단일 일정 나중
-      if (!a.isSingle && b.isSingle) return -1
-      if (a.isSingle && !b.isSingle) return 1
-      // 같은 유형이면 시작일 오름차순
-      return a.start_at < b.start_at ? -1 : a.start_at > b.start_at ? 1 : 0
-    })
+  const maxSlot = Math.max(...daySchedules.map(s => s.slotIndex))
+
+  // 슬롯 0 ~ maxSlot 배열 생성, 해당 슬롯 이벤트 없으면 null
+  return Array.from({ length: maxSlot + 1 }, (_, i) =>
+    daySchedules.find(s => s.slotIndex === i) ?? null
+  )
 })
 </script>
 
@@ -66,30 +51,28 @@ const schedules = computed(() => {
     v-on="dayEvents"
   >
     <span class="calendar_date_number">{{ day.day }}</span>
-    <ul v-if="schedules.length" class="calendar_schedule_list">
+    <ul v-if="scheduleRows.length" class="calendar_schedule_list">
       <li
-        v-for="schedule in schedules"
-        :key="schedule.id"
+        v-for="(schedule, idx) in scheduleRows"
+        :key="schedule ? schedule.id : `gap-${idx}`"
         class="item_schedule"
       >
+        <!-- 이벤트 막대 -->
         <span
+          v-if="schedule"
           class="calendar_schedule_label"
           :class="{
             is_single: schedule.isSingle,
             is_start: schedule.isVisualStart && !schedule.isVisualEnd,
             is_end: schedule.isVisualEnd && !schedule.isVisualStart,
           }"
+          :style="{ backgroundColor: schedule.color }"
           :title="schedule.title"
         >
-          <!-- 단일 일정: 텍스트 직접 -->
-          <template v-if="schedule.isSingle">{{ schedule.title }}</template>
-          <!-- 기간 일정 시작: 전체 span 너비로 텍스트 중앙 정렬 -->
-          <span
-            v-else-if="schedule.isVisualStart"
-            class="label_text_multi"
-            :style="{ width: `calc(${schedule.daysInRow} * 100%)` }"
-          >{{ schedule.title }}</span>
+          <template v-if="schedule.isVisualStart">{{ schedule.title }}</template>
         </span>
+        <!-- 빈 슬롯: 다른 셀의 이벤트가 이 줄을 점유 중 -->
+        <span v-else class="calendar_schedule_gap" aria-hidden="true" />
       </li>
     </ul>
   </div>
@@ -124,6 +107,7 @@ const schedules = computed(() => {
   font-size: $font_size_base;
   font-weight: 600;
   line-height: 1.2;
+  color: $color_text;
 }
 
 .calendar_schedule_list {
@@ -141,38 +125,35 @@ const schedules = computed(() => {
 
 .calendar_schedule_label {
   display: block;
-  position: relative;
-  overflow: visible; // 기간 일정 텍스트가 인접 셀까지 확장되도록
+  overflow: hidden;
   min-height: calc(#{$font_size_sm} * 1.6);
-  background-color: $color_primary;
+  font-size: $font_size_sm;
+  line-height: 1.6;
+  color: $color_selected_text;
+  // backgroundColor는 인라인 스타일로 이벤트별 색상 적용
 
-  // 단일 일정: 텍스트 포함, 클립
   &.is_single {
     border-radius: 2px;
-    overflow: hidden;
-    font-size: $font_size_sm;
-    line-height: 1.6;
-    color: $color_selected_text;
     padding: 0 $space_xs;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  &.is_start { border-radius: 2px 0 0 2px; }
-  &.is_end   { border-radius: 0 2px 2px 0; }
-  // 중간 셀은 기본값(border-radius: 0)이므로 별도 클래스 불필요
+  &.is_start {
+    border-radius: 2px 0 0 2px;
+    padding: 0 0 0 $space_xs;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &.is_end {
+    border-radius: 0 2px 2px 0;
+  }
 }
 
-// 기간 일정 텍스트: 전체 bar 너비에 걸쳐 중앙 정렬
-.label_text_multi {
+// 빈 슬롯: 막대 높이만큼 공간 확보
+.calendar_schedule_gap {
   display: block;
-  font-size: $font_size_sm;
-  line-height: 1.6;
-  color: $color_selected_text;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  pointer-events: none;
+  min-height: calc(#{$font_size_sm} * 1.6);
 }
 </style>

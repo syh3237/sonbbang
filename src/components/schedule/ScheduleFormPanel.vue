@@ -3,7 +3,7 @@ import { useSchedule } from '@/composables/useSchedule'
 import { storeToRefs } from 'pinia'
 import { useScheduleStore } from '@/stores/schedule.store'
 
-const { form, formError, editingItem, closeForm, submitForm } = useSchedule()
+const { form, formError, editingItem, closeForm, submitForm, deleteSchedule } = useSchedule()
 const scheduleStore = useScheduleStore()
 const { is_loading } = storeToRefs(scheduleStore)
 </script>
@@ -48,6 +48,17 @@ const { is_loading } = storeToRefs(scheduleStore)
 
       <button type="submit" class="btn_save" :class="{ is_disabled: is_loading }" :disabled="is_loading">
         {{ is_loading ? '저장 중…' : '저장' }}
+      </button>
+
+      <button
+        v-if="editingItem"
+        type="button"
+        class="btn_delete"
+        :class="{ is_disabled: is_loading }"
+        :disabled="is_loading"
+        @click="deleteSchedule"
+      >
+        일정 삭제
       </button>
     </form>
   </section>
@@ -112,5 +123,20 @@ const { is_loading } = storeToRefs(scheduleStore)
 .schedule_form_error {
   font-size: $font_size_sm;
   color: $color_sunday;
+}
+
+.btn_delete {
+  width: 100%;
+  min-height: $btn_min_height;
+  border-radius: $radius_sm;
+  font-size: $font_size_base;
+  font-weight: 600;
+  color: $color_sunday;
+  border: $border_width solid $color_sunday;
+
+  &.is_disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 </style>

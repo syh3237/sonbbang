@@ -102,7 +102,6 @@ onMounted(() => {
 
 .calendar_box {
   border: $border_width solid $color_border;
-  border-radius: $radius_md;
   overflow: hidden;
 
   :deep(.vc-container) {

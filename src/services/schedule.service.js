@@ -25,4 +25,9 @@ export const scheduleService = {
     const client = assertSupabase()
     return client.from('schedules').update(payload).eq('id', id).select().single()
   },
+
+  async remove(id) {
+    const client = assertSupabase()
+    return client.from('schedules').delete().eq('id', id)
+  },
 }

@@ -66,6 +66,17 @@ export const useScheduleStore = defineStore('schedule', () => {
     }
   }
 
+  async function remove(id) {
+    is_loading.value = true
+    try {
+      const { error } = await scheduleService.remove(id)
+      if (error) throw error
+      items.value = items.value.filter(i => i.id !== id)
+    } finally {
+      is_loading.value = false
+    }
+  }
+
   async function update({ id, title, startDate, endDate, memo }) {
     is_loading.value = true
     const payload = {
@@ -94,5 +105,6 @@ export const useScheduleStore = defineStore('schedule', () => {
     fetchByMonth,
     create,
     update,
+    remove,
   }
 })

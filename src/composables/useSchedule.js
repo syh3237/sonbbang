@@ -56,6 +56,17 @@ export function useSchedule() {
     formError.value = ''
   }
 
+  async function deleteSchedule() {
+    if (!editingItem.value) return
+    if (!confirm(`"${editingItem.value.title}" 일정을 삭제할까요?`)) return
+    try {
+      await scheduleStore.remove(editingItem.value.id)
+      closeForm()
+    } catch (err) {
+      formError.value = err.message || '일정 삭제에 실패했습니다.'
+    }
+  }
+
   async function submitForm() {
     formError.value = ''
 
@@ -107,5 +118,6 @@ export function useSchedule() {
     openEditForm,
     closeForm,
     submitForm,
+    deleteSchedule,
   }
 }

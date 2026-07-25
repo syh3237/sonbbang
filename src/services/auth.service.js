@@ -45,7 +45,9 @@ export const authService = {
 
   async resetPasswordForEmail(email) {
     const client = assertSupabase()
-    return client.auth.resetPasswordForEmail(email)
+    return client.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset-password`,
+    })
   },
 
   async updatePassword(newPassword) {
